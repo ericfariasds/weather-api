@@ -4,10 +4,29 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model City {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  country   String
+  createdAt DateTime  @default(now())
+  queries   WeatherQuery[]
+}
+
+model WeatherQuery {
+  id          Int      @id @default(autoincrement())
+  cityId      Int
+  city        City     @relation(fields: [cityId], references: [id])
+  temperature Float
+  feelsLike   Float
+  humidity    Int
+  description String
+  windSpeed   Float
+  queriedAt   DateTime @default(now())
 }
